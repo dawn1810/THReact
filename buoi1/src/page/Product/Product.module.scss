@@ -1,0 +1,37 @@
+.wrapper {
+    width: 90%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 10px;
+    margin: 50px auto 0;
+
+    .image {
+        width: 30%;
+        height: 50%;
+        object-fit: contain;
+        border-radius: 5px;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    }
+
+    .info-container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 10px;
+    }
+
+    .title {
+        font-size: 2.8rem;
+        font-weight: 600;
+    }
+
+    .price {
+        color: palevioletred;
+    }
+
+    .price,
+    .decribe {
+        font-size: 1.3rem;
+    }
+}

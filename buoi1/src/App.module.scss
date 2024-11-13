@@ -1,13 +1,13 @@
 .wrapper {
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: column;
 
-  .product-list {
-    width: 90%;
-    align-self: center;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(11.875em, 1fr));
-    grid-gap: 10px;
-    margin: 20px 0;
-  }
+    .product-list {
+        width: 90%;
+        align-self: center;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(11.875em, 1fr));
+        grid-gap: 10px;
+        margin: 20px 0;
+    }
 }
