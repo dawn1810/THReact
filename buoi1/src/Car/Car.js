@@ -1,7 +1,7 @@
-import {useState} from 'react';
+import {useRef, useState} from 'react';
 
 function Car() {
-
+    const updateYear = useRef()
     const [car, setCar] = useState({
         name: 'Rolls-Royce Boat Tail',
         color: 'Black',
@@ -11,7 +11,7 @@ function Car() {
     const handleChange = (event) => {
         setCar( prev => ({
             ...prev,
-            year: event.target.value
+            year: updateYear.current.value
         }))
     }
 
@@ -23,7 +23,7 @@ function Car() {
             Car year: {car.year},
             <br/>
             Update Year of Car: 
-            <input type="number"/>
+            <input ref={updateYear} type="number"/>
             <input type="button" value="Update Year" onClick={handleChange}/>
         </>
       )

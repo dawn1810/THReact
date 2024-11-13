@@ -1,0 +1,40 @@
+.wrapper {
+  width: 90%;
+  margin: 0 18px;
+
+  .categories {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 5px;
+
+    button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 8px 15px;
+      background: #ffffff;
+      border: 1px solid #e5e5e5;
+      box-shadow: 0px 0.5px 0.5px #efefef,
+        0px 1px 0.5px rgba(239, 239, 239, 0.5);
+      border-radius: 20px;
+      font-weight: 600;
+      color: #171718;
+      transition: all 0.2s cubic-bezier(0.15, 0.83, 0.66, 1);
+
+      &:hover {
+        transform: scale(1.05) translateY(-3px);
+      }
+
+      &:active {
+        transform: scale(0.9) translateY(-2px);
+      }
+    }
+
+    .selected {
+      background: #171718;
+      color: #ffffff;
+    }
+  }
+}
