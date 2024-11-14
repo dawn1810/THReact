@@ -2,18 +2,11 @@ import classNames from 'classnames/bind';
 
 import styles from './Profile.module.scss';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { getCookie } from '../../lib/function';
+import { DataContext } from '../../lib/provider';
 
 const cx = classNames.bind(styles);
-
-const data = {
-    ten: 'Ghê nhựa',
-    gia: '100.000',
-    hinhanh:
-        'https://product.hstatic.net/1000380002/product/ghe_banh_giot_nuoc-06_0429c0a2994e4a6a9274e35329af5ba7.jpg',
-    mota: 'Ghế nhựa màu đỏ với tựa lưng mang đến sự thoải mái và tiện dụng. \nThiết kế đơn giản nhưng tinh tế, phù hợp với nhiều không gian khác nhau. \nChất liệu nhựa bền đẹp, dễ lau chùi, thích hợp cho cả trong nhà và ngoài trời.',
-};
 
 function Product() {
     const navigate = useNavigate();
@@ -31,40 +24,37 @@ function Product() {
                     Authorization: `Bearer ${token}`,
                 },
                 body: JSON.stringify({
-                    masp: searchParams.get('id'),
+                    userId: searchParams.get('id'),
                 }),
             });
 
-            const productInfo = await response.json();
-            if (productInfo.EC === '200') {
-                setData(productInfo.DT);
-            } else if (productInfo.EC === '401') {
+            const userInfo = await response.json();
+            console.log(userInfo);
+
+            if (userInfo.EC === '200') {
+                setData(userInfo.DT);
+            } else if (userInfo.EC === '401') {
                 navigate('/login');
-            } else if (productInfo.EC === '500') {
+            } else if (userInfo.EC === '500') {
                 alert('Lỗi hệ thông');
             }
         };
 
         getProductInfo();
-    }, [searchParams]);
+    }, []);
 
     return (
         <div className={cx('wrapper')}>
-            {data && 
-            <>
-                <img className={cx('image')} alt={data.ten} src={data.hinhanh} />
-                <div className={cx('info-container')}>
-                    <div className={cx('title')}>{data.ten}</div>
-                    <div className={cx('price')}>{data.gia} VND</div>
-                    <div
-                        className={cx('decribe')}
-                        dangerouslySetInnerHTML={{
-                            __html: data.mota.replaceAll('\n', '<br />'),
-                        }}
-                    />
-                </div>
-            </>
-            }
+            {data && (
+                <>
+                    <div className={cx('text')}>Email: {data.email}</div>
+                    <div className={cx('text')}>Họ và tên: {data.fullname}</div>
+                    <div className={cx('text')}>
+                        Giới tính: {data.sex === 0 ? 'Nam' : data.sex === 1 ? 'Nữ' : 'Khác'}
+                    </div>
+                    <div className={cx('text')}>Địa chỉ: {data.address && data.address !== 'null' ? data.address : 'Chưa có'}</div>
+                </>
+            )}
         </div>
     );
 }

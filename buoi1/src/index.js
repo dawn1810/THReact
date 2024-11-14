@@ -8,6 +8,7 @@ import Login from './page/Login';
 import Product from './page/Product';
 import Header from './component/Header';
 import Profile from './page/Profile';
+import DataProvider from './lib/provider';
 
 const router = createBrowserRouter([
     {
@@ -46,7 +47,7 @@ const router = createBrowserRouter([
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <React.StrictMode>
-        <RouterProvider router={router} />
+        <DataProvider><RouterProvider router={router} /></DataProvider>
     </React.StrictMode>,
 );
 

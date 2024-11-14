@@ -1,12 +1,14 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import classNames from 'classnames/bind';
 
 import styles from './Login.module.scss';
 import { useNavigate } from 'react-router-dom';
+import { DataContext } from '../../lib/provider';
 const cx = classNames.bind(styles);
 
 function Login() {
     const navigate = useNavigate();
+    const { setCurrUser } = useContext(DataContext);
     const [input, setInput] = useState({
         username: '',
         password: '',
@@ -35,6 +37,7 @@ function Login() {
 
         const login = await response.json();
         if (login.EC === '200') {
+            setCurrUser(login.DT);
             navigate('/');
         } else if (login.EC === '500') {
             alert('Lỗi hệ thông');
