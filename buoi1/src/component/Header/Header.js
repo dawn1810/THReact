@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import classNames from 'classnames/bind';
 
 import styles from './Header.module.scss';
@@ -6,18 +6,26 @@ import styles from './Header.module.scss';
 const cx = classNames.bind(styles);
 
 function Header() {
+    const navigate = useNavigate();
+
     const handleLogout = async (event) => {
         event.preventDefault();
 
         const response = await fetch('http://localhost:8000/api/logout', {
             method: 'GET',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
             },
         });
 
         const logout = await response.json();
-        console.log(logout);
+        if (logout.EC === '200') {
+            navigate('/login');
+        } else if (logout.EC === '401') {
+            alert('Yêu cầu xác thực');
+            navigate('/login');
+        }
     };
 
     return (

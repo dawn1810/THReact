@@ -1,8 +1,8 @@
 import classNames from 'classnames/bind';
 
 import styles from './Product.module.scss';
-import { useSearchParams } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { getCookie } from '../../lib/function';
 
 const cx = classNames.bind(styles);
@@ -16,13 +16,16 @@ const data = {
 };
 
 function Product() {
+    const navigate = useNavigate();
     let [searchParams] = useSearchParams();
+    const [data, setData] = useState();
 
     useEffect(() => {
         const getProductInfo = async () => {
             const token = getCookie('jwt');
             const response = await fetch('http://localhost:8000/api/getProductInfo', {
                 method: 'POST',
+                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`,
@@ -33,7 +36,13 @@ function Product() {
             });
 
             const productInfo = await response.json();
-            console.log(productInfo);
+            if (productInfo.EC === '200') {
+                setData(productInfo.DT);
+            } else if (productInfo.EC === '401') {
+                navigate('/login');
+            } else if (productInfo.EC === '500') {
+                alert('Lỗi hệ thông');
+            }
         };
 
         getProductInfo();
@@ -41,17 +50,21 @@ function Product() {
 
     return (
         <div className={cx('wrapper')}>
-            <img className={cx('image')} alt={data.ten} src={data.hinhanh} />
-            <div className={cx('info-container')}>
-                <div className={cx('title')}>{data.ten}</div>
-                <div className={cx('price')}>{data.gia} VND</div>
-                <div
-                    className={cx('decribe')}
-                    dangerouslySetInnerHTML={{
-                        __html: data.mota.replaceAll('\n', '<br />'),
-                    }}
-                />
-            </div>
+            {data && (
+                <>
+                    <img className={cx('image')} alt={data.ten} src={data.hinhanh} />
+                    <div className={cx('info-container')}>
+                        <div className={cx('title')}>{data.ten}</div>
+                        <div className={cx('price')}>{data.gia} VND</div>
+                        <div
+                            className={cx('decribe')}
+                            dangerouslySetInnerHTML={{
+                                __html: data.mota ? data.mota.replaceAll('\n', '<br />') : 'Không có mô tả',
+                            }}
+                        />
+                    </div>
+                </>
+            )}
         </div>
     );
 }

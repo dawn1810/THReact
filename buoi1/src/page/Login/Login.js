@@ -2,9 +2,11 @@ import { useState } from 'react';
 import classNames from 'classnames/bind';
 
 import styles from './Login.module.scss';
+import { useNavigate } from 'react-router-dom';
 const cx = classNames.bind(styles);
 
 function Login() {
+    const navigate = useNavigate();
     const [input, setInput] = useState({
         username: '',
         password: '',
@@ -24,6 +26,7 @@ function Login() {
 
         const response = await fetch('http://localhost:8000/api/login', {
             method: 'POST',
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -31,6 +34,11 @@ function Login() {
         });
 
         const login = await response.json();
+        if (login.EC === '200') {
+            navigate('/');
+        } else if (login.EC === '500') {
+            alert('Lỗi hệ thông');
+        }
     };
 
     return (

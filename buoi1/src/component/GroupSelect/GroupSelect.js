@@ -7,46 +7,31 @@ import { getCookie } from '../../lib/function';
 
 const cx = classNames.bind(styles);
 
-const GroupList = [
-    {
-        id: 1,
-        ten: 'Thời trang',
-    },
-    {
-        id: 2,
-        ten: 'Điện thoại phụ kiện',
-    },
-    {
-        id: 3,
-        ten: 'Thiết bị điện tử',
-    },
-    {
-        id: 4,
-        ten: 'Đồng hồ',
-    },
-    {
-        id: 5,
-        ten: 'Giầy dép',
-    },
-];
-
 function GroupSelect() {
     const navigate = useNavigate();
     const [selected, setSelected] = useState(0);
+    const [groupList, setGroupList] = useState();
 
     useEffect(() => {
         const getGroupList = async () => {
             const token = getCookie('jwt');
             const response = await fetch('http://localhost:8000/api/getGroupList', {
                 method: 'GET',
+                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`,
                 },
             });
 
-            const groupList = await response.json();
-            console.log(groupList);
+            const groupRes = await response.json();
+            if (groupRes.EC === '200') {
+                setGroupList(groupRes.DT);
+            } else if (groupRes.EC === '401') {
+                navigate('/login');
+            } else if (groupRes.EC === '500') {
+                alert('Lỗi hệ thông');
+            }
         };
 
         getGroupList();
@@ -55,7 +40,6 @@ function GroupSelect() {
     const handleSelect = (event) => {
         setSelected(+event.target.value);
         navigate('?id=' + event.target.value);
-        
     };
 
     return (
@@ -71,17 +55,18 @@ function GroupSelect() {
                 >
                     Tất cả
                 </button>
-                {GroupList.map((group) => (
-                    <button
-                        key={group.id}
-                        type="button"
-                        className={cx({ selected: selected === group.id })}
-                        value={group.id}
-                        onClick={handleSelect}
-                    >
-                        {group.ten}
-                    </button>
-                ))}
+                {groupList &&
+                    groupList.map((group) => (
+                        <button
+                            key={group.idnhom}
+                            type="button"
+                            className={cx({ selected: selected === group.idnhom })}
+                            value={group.idnhom}
+                            onClick={handleSelect}
+                        >
+                            {group.ten}
+                        </button>
+                    ))}
             </div>
         </div>
     );
